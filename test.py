@@ -14,6 +14,8 @@ if len(sys.argv) == 1:
 parser = argparse.ArgumentParser(description='OpenAI Gym Solver')  # credits to HackerShack
 parser.add_argument('--game_name', type=str,
                     help="The folder that contains a 'game.py', a 'config' file and a 'genomes' folder.")
+parser.add_argument('--genome', type=str, default="",
+                    help="The folder that contains a 'game.py', a 'config' file and a 'genomes' folder.")
 parser.add_argument('--episodes', type=int, default=5,
                     help="The number of times to run the simulation.")
 args = parser.parse_args()
@@ -29,10 +31,16 @@ if last == 0:
     print("Train your network first!")
     exit()
 
-genomeFile = os.path.realpath(args.game_name + "/genomes/g" + str(last) + ".gen")
-genome = pickle.load(open(genomeFile, "rb"))
+if args.genome != "":
+    genome_name = args.genome
+    genome_file = os.path.realpath(args.game_name + "/genomes/" + args.genome + ".gen")
+else:
+    genome_name = "g" + str(last)
+    genome_file = os.path.realpath(args.game_name + "/genomes/g" + str(last) + ".gen")
 
-print("Running genome g" + str(last))
+genome = pickle.load(open(genome_file, "rb"))
+
+print("Running genome " + genome_name)
 for i in range(args.episodes):
     fitness = game.play(neat.nn.FeedForwardNetwork.create(genome, config), True)
     print("Fitness is %f" % fitness)

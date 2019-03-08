@@ -30,23 +30,18 @@ args = parser.parse_args()
 # FUNÇÕES AUXILIARES
 def save_checkpoint():
     global pop
-    outdir = os.path.realpath(args.game_name + "/checkpoints")
-    number = len(os.listdir(outdir)) + 1
-    file = open(outdir + "/c" + str(number) + ".ckp", "wb")
-    pickle.dump(pop, file)
-    print("Saved checkpoint c" + str(number))
+    outdir = os.path.realpath(args.game_name + "/checkpoint")
+    with open(outdir, "wb") as file:
+        pickle.dump(pop, file)
+
+    print("Saved checkpoint.")
 
 
 def load_checkpoint():
     global pop
-    outdir = os.path.realpath(args.game_name + "/checkpoints")
-    number = len(os.listdir(outdir))
-    if number == 0:
-        print("No checkpoints to be loaded.")
-        return
-
-    outdir = os.path.realpath(outdir + "/c" + str(number) + ".ckp")
-    pop = pickle.load(open(outdir, "rb"))
+    outdir = os.path.realpath(args.game_name + "/checkpoint")
+    with open(outdir, "rb") as file:
+        pop = pickle.load(file)
 
 
 # CONFIGS
